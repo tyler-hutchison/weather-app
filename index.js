@@ -48,7 +48,7 @@ let weatherData = {};
 const getWeather = async (lat, lng) => {
   try {
     const response = await fetch(
-      `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,rain,showers,snowfall,weather_code,cloud_cover,wind_speed_10m,wind_direction_10m,wind_gusts_10m&hourly=temperature_2m,relative_humidity_2m,dew_point_2m,rain,showers,snowfall,weather_code,cloud_cover,cloud_cover_low,cloud_cover_mid,cloud_cover_high,visibility,wind_speed_10m,wind_direction_10m,wind_gusts_10m,freezing_level_height&daily=weather_code,temperature_2m_max,temperature_2m_min,rain_sum,showers_sum,snowfall_sum,precipitation_probability_max&timezone=auto`
+      `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,rain,showers,snowfall,weather_code,cloud_cover,wind_speed_10m,wind_direction_10m,wind_gusts_10m&hourly=temperature_2m,relative_humidity_2m,dew_point_2m,,apparent_temperature,rain,showers,snowfall,weather_code,cloud_cover,cloud_cover_low,cloud_cover_mid,cloud_cover_high,visibility,wind_speed_10m,wind_direction_10m,wind_gusts_10m,freezing_level_height&daily=weather_code,temperature_2m_max,temperature_2m_min,rain_sum,showers_sum,snowfall_sum,precipitation_probability_max&timezone=auto`
     );
     const data = await response.json();
     Object.assign(weatherData, data);
@@ -145,18 +145,18 @@ const displayData = () => {
   //  current weather icon and temperature
   let icon = getSymbol(current.weather_code);
 
+  let currentTempDisplay =
+    Math.round(current.temperature_2m).toString() +
+    current_units.temperature_2m.toString();
+
+  let apparentTempDisplay =
+    Math.round(current.apparent_temperature).toString() +
+    current_units.apparent_temperature.toString();
+
   $(".current-icon")
     .append('<div class="current-icon-container"></div>')
-    .append(
-      `<p>${Math.round(current.temperature_2m)}${
-        current_units.temperature_2m
-      }</p>`
-    )
-    .append(
-      `<p>Feels like: ${Math.round(current.apparent_temperature)}${
-        current_units.apparent_temperature
-      }</p>`
-    )
+    .append(`<p>${currentTempDisplay}</p>`)
+    .append(`<p>Feels like: ${apparentTempDisplay}</p>`)
     .append(
       '<p class="credit">Icon by <a href="https://www.flaticon.com/authors/freepik" target="_blank">Freepik</a><p>'
     );
@@ -260,6 +260,57 @@ const displayData = () => {
       );
     $(".forecast-table").append($container);
   });
+
+  // detailed weather
+  $(".detailed-forecast-container").remove();
+  $("#detailed-forecast").append(
+    '<div class="detailed-forecast-container"><canvas id="myChart"></canvas></div>'
+  );
+
+  const ctx = document.getElementById("myChart");
+
+  new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+      datasets: [
+        {
+          label: "# of Votes",
+          data: [12, 19, 3, 5, 2, 3],
+          borderWidth: 1,
+        },
+      ],
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true,
+        },
+      },
+    },
+  });
+
+  let timeData = hourly.time.map((element) => element.split("T")[1]); // converts ISO 8601 date & time to 24 hour notation in an array
+
+  // let temperatureChart = new Chart($temperatureChart, {
+  //   type: "line",
+  //   data: {
+  //     labels: timeData,
+  //     datasets: [{
+  //       data: hourly.temperature_2m,
+  //       borderColor: "red",
+  //       fill: false
+  //     },{
+  //       data: hourly.apparent_temperature,
+  //       borderColor: "yellow",
+  //       fill: false
+  //     },{
+  //       data: hourly.relative_humidity_2m,
+  //       borderColor: "blue",
+  //       fill: false
+  //     }]
+  //   }
+  // });
 };
 
 map.on("click", onMapClick);
