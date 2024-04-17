@@ -1,48 +1,3 @@
-let map = L.map("map").setView([50.9971, -118.1953], 12); // initialize map
-
-// topographic layer (default)
-const Esri_WorldTopoMap = L.tileLayer(
-  "https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}",
-  {
-    attribution:
-      "Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community",
-  }
-).addTo(map);
-
-// satelite imagery layer
-const Esri_WorldImagery = L.tileLayer(
-  "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-  {
-    attribution:
-      "Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community",
-  }
-);
-
-const baseMaps = {
-  "Topographic Map": Esri_WorldTopoMap,
-  "Satelite Imagery": Esri_WorldImagery,
-};
-
-let layerControl = L.control.layers(baseMaps).addTo(map); // add layer radio buttons to map
-L.control.scale().addTo(map); // add scale to map
-map.zoomControl.setPosition("bottomright"); // position zoom buttons
-let geocoder = L.Control.geocoder().addTo(map); // add geocoder search button to map
-geocoder.setPosition("topleft"); // position search button
-let marker;
-
-const onMapClick = async (e) => {
-  if (geocoder._geocodeMarker) {
-    map.removeLayer(geocoder._geocodeMarker);
-  }
-
-  if (marker) {
-    map.removeLayer(marker);
-  }
-  marker = new L.Marker(e.latlng).addTo(map);
-  await getWeather(e.latlng.lat, e.latlng.lng);
-  displayData();
-};
-
 let weatherData = {};
 
 const getWeather = async (lat, lng) => {
@@ -143,7 +98,12 @@ const displayData = () => {
     .append('<div class="current-wind"></div>');
 
   //  current weather icon and temperature
+
   let icon = getSymbol(current.weather_code);
+
+  if (icon = "sun" && current.isDay !== 0) {
+    icon = "night";
+  }
 
   let currentTempDisplay =
     Math.round(current.temperature_2m).toString() +
@@ -166,7 +126,9 @@ const displayData = () => {
 
   //  more specific current temperature info
   let newstring = current.time.replace(/:\d{2}/, ":00"); //  replace any minute value with 00
+
   let hourlyIndex = hourly.time.indexOf(newstring); //  get hourlyIndex for hourly data relating to current hour
+
   $(".current-temp")
     .append(
       `<p>Temperature: ${current.temperature_2m}${current_units.temperature_2m}</p>`
@@ -205,6 +167,7 @@ const displayData = () => {
 
   //  current wind info
   let windDirStr = degToCompass(current.wind_direction_10m);
+
   $(".current-wind")
     .append(
       `<p>Wind: ${current.wind_speed_10m} ${current_units.wind_speed_10m} ${windDirStr}</p>`
@@ -261,65 +224,43 @@ const displayData = () => {
     $(".forecast-table").append($container);
   });
 
-  // detailed weather
   $(".detailed-forecast-container").remove();
-  $("#detailed-forecast").append(
-    '<div class="detailed-forecast-container"><canvas id="myChart"></canvas></div>'
-  );
-
-  const ctx = document.getElementById("myChart");
-
-  new Chart(ctx, {
-    type: "bar",
-    data: {
-      labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-      datasets: [
-        {
-          label: "# of Votes",
-          data: [12, 19, 3, 5, 2, 3],
-          borderWidth: 1,
-        },
-      ],
-    },
-    options: {
-      scales: {
-        y: {
-          beginAtZero: true,
-        },
-      },
-    },
-  });
-
-  let timeData = hourly.time.map((element) => element.split("T")[1]); // converts ISO 8601 date & time to 24 hour notation in an array
-
-  // let temperatureChart = new Chart($temperatureChart, {
-  //   type: "line",
-  //   data: {
-  //     labels: timeData,
-  //     datasets: [{
-  //       data: hourly.temperature_2m,
-  //       borderColor: "red",
-  //       fill: false
-  //     },{
-  //       data: hourly.apparent_temperature,
-  //       borderColor: "yellow",
-  //       fill: false
-  //     },{
-  //       data: hourly.relative_humidity_2m,
-  //       borderColor: "blue",
-  //       fill: false
-  //     }]
-  //   }
-  // });
+    $("#detailed-forecast").append(
+      '<div class="detailed-forecast-container"><canvas id="temperature-chart" class="detailed-chart"></canvas></div>'
+    );
 };
 
-map.on("click", onMapClick);
-
-geocoder.on("markgeocode", async function (e) {
-  console.log(e);
-  if (marker) {
-    map.removeLayer(marker);
-  }
-  await getWeather(e.geocode.center.lat, e.geocode.center.lng);
-  displayData();
-});
+const displayDetailedWeather = () => {
+    
+  // detailed weather 
+    let timeData = weatherData.hourly.time.map((element) => element.split("T")[1]); // converts ISO 8601 date & time to 24 hour notation in an array
+  
+    new Chart($("#temperature-chart"), {
+      type: "line",
+      data: {
+        labels: timeData,
+        datasets: [{
+          label: "Temperature",
+          data: weatherData.hourly.temperature_2m,
+          borderColor: "red",
+          fill: false
+        },{
+          label: "Feels Like",
+          data: weatherData.hourly.apparent_temperature,
+          borderColor: "yellow",
+          fill: false
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            title: {
+              display: true,
+              align: "center",
+              text: `Temperature: (${weatherData.hourly_units.temperature_2m})`
+            }
+          }
+        }
+      }
+    });
+}
