@@ -101,7 +101,7 @@ const displayData = () => {
 
   let icon = getSymbol(current.weather_code);
 
-  if (icon = "sun" && current.isDay !== 0) {
+  if (icon === "sun" && current.is_day !== 1) {
     icon = "night";
   }
 
@@ -225,42 +225,200 @@ const displayData = () => {
   });
 
   $(".detailed-forecast-container").remove();
-    $("#detailed-forecast").append(
+  $("#detailed-forecast")
+    .append(
       '<div class="detailed-forecast-container"><canvas id="temperature-chart" class="detailed-chart"></canvas></div>'
+    )
+    .append(
+      '<div class="detailed-forecast-container"><canvas id="precipitation-chart" class="detailed-chart"></canvas></div>'
+    )
+    .append(
+      '<div class="detailed-forecast-container"><canvas id="cloud-chart" class="detailed-chart"></canvas></div>'
+    )
+    .append(
+      '<div class="detailed-forecast-container"><canvas id="wind-chart" class="detailed-chart"></canvas></div>'
     );
 };
 
+const addArray = (arr) => {
+  // makes a cummulative array from an array of hourly rain or snow values
+  let sum = 0;
+  let newArr = [];
+  arr.map((num) => {
+    sum += num;
+    newArr.push(sum);
+  });
+  return newArr;
+};
+
 const displayDetailedWeather = () => {
-    
-  // detailed weather 
-    let timeData = weatherData.hourly.time.map((element) => element.split("T")[1]); // converts ISO 8601 date & time to 24 hour notation in an array
-  
-    new Chart($("#temperature-chart"), {
-      type: "line",
-      data: {
-        labels: timeData,
-        datasets: [{
+  // detailed weather
+
+  let timeData = weatherData.hourly.time.map(
+    (element) => element.split("T")[1]
+  ); // converts ISO 8601 date & time to 24 hour notation in an array
+  let rainArr = addArray(weatherData.hourly.rain);
+  let snowArr = addArray(weatherData.hourly.snowfall);
+  let showersArr = addArray(weatherData.hourly.showers);
+
+  new Chart($("#temperature-chart"), {
+    type: "line",
+    data: {
+      labels: timeData,
+      datasets: [
+        {
           label: "Temperature",
           data: weatherData.hourly.temperature_2m,
           borderColor: "red",
-          fill: false
-        },{
+          fill: false,
+        },
+        {
           label: "Feels Like",
           data: weatherData.hourly.apparent_temperature,
           borderColor: "yellow",
-          fill: false
-        }]
+          fill: false,
+        },
+        {
+          label: "Dew Point",
+          data: weatherData.hourly.dew_point_2m,
+          borderColor: "blue",
+          fill: false,
+        },
+      ],
+    },
+    options: {
+      scales: {
+        y: {
+          title: {
+            display: true,
+            align: "center",
+            text: `Temperature (${weatherData.hourly_units.temperature_2m})`,
+          },
+        },
       },
-      options: {
-        scales: {
-          y: {
-            title: {
-              display: true,
-              align: "center",
-              text: `Temperature: (${weatherData.hourly_units.temperature_2m})`
-            }
-          }
-        }
-      }
-    });
-}
+    },
+  });
+
+  new Chart($("#precipitation-chart"), {
+    type: "line",
+    data: {
+      labels: timeData,
+      datasets: [
+        {
+          label: "Snow (cm)",
+          data: snowArr,
+          borderColor: "grey",
+          fill: false,
+        },
+        {
+          label: "Rain (mm)",
+          data: rainArr,
+          borderColor: "blue",
+          fill: false,
+        },
+        {
+          label: "Showers (mm)",
+          data: showersArr,
+          borderColor: "black",
+          fill: false,
+        },
+      ],
+    },
+    options: {
+      scales: {
+        y: {
+          title: {
+            display: true,
+            align: "center",
+            text: `Precipitation (${weatherData.hourly_units.rain}/${weatherData.hourly_units.snowfall})`,
+          },
+        },
+      },
+    },
+  });
+
+  new Chart($("#cloud-chart"), {
+    type: "line",
+    data: {
+      labels: timeData,
+      datasets: [
+        {
+          label: "Total",
+          data: weatherData.hourly.cloud_cover,
+          borderColor: "red",
+          fill: false,
+        },
+        {
+          label: "High",
+          data: weatherData.hourly.cloud_cover_high,
+          borderColor: "grey",
+          fill: false,
+        },
+        {
+          label: "Mid",
+          data: weatherData.hourly.cloud_cover_mid,
+          borderColor: "blue",
+          fill: false,
+        },
+        {
+          label: "Low",
+          data: weatherData.hourly.cloud_cover_low,
+          borderColor: "black",
+          fill: false,
+        },
+      ],
+    },
+    options: {
+      scales: {
+        y: {
+          title: {
+            display: true,
+            align: "center",
+            text: `Cloud Cover (${weatherData.hourly_units.cloud_cover})`,
+          },
+        },
+      },
+    },
+  });
+
+  new Chart($("#wind-chart"), {
+    type: "line",
+    data: {
+      labels: timeData,
+      datasets: [
+        {
+          label: "Wind Speed",
+          data: weatherData.hourly.wind_speed_10m,
+          borderColor: "red",
+          fill: false,
+        },
+        {
+          label: "Wind Gusts",
+          data: weatherData.hourly.wind_gusts_10m,
+          borderColor: "grey",
+          fill: false,
+        },
+      ],
+    },
+    options: {
+      scales: {
+        y: {
+          title: {
+            display: true,
+            align: "center",
+            text: `Wind Speed (${weatherData.hourly_units.wind_speed_10m})`,
+          },
+        },
+      },
+    },
+  });
+};
+
+/*
+  TO DO:
+
+- change weather icon logic
+  -no sun and cloud condition
+- add detailed forecast
+- make it look pretty
+*/
