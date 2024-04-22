@@ -227,17 +227,24 @@ const displayData = () => {
   $(".detailed-forecast-container").remove();
   $("#detailed-forecast")
     .append(
-      '<div class="detailed-forecast-container"><canvas id="temperature-chart" class="detailed-chart"></canvas></div>'
+      '<div class="detailed-temp-container"><canvas id="temperature-chart" class="detailed-chart"></canvas></div>'
     )
     .append(
-      '<div class="detailed-forecast-container"><canvas id="precipitation-chart" class="detailed-chart"></canvas></div>'
+      '<div class="detailed-precip-container"><canvas id="precipitation-chart" class="detailed-chart"></canvas></div>'
     )
     .append(
-      '<div class="detailed-forecast-container"><canvas id="cloud-chart" class="detailed-chart"></canvas></div>'
+      '<div class="detailed-freeze-container"><canvas id="freeze-chart" class="detailed-chart"></canvas></div>'
     )
+    .append('<div class="detailed-cloud-container"></div>')
     .append(
-      '<div class="detailed-forecast-container"><canvas id="wind-chart" class="detailed-chart"></canvas></div>'
+      '<div class="detailed-wind-container"><canvas id="wind-chart" class="detailed-chart"></canvas></div>'
     );
+
+  $(".detailed-cloud-container")
+    .append('<canvas id="cloud-chart" class="detailed-chart"></canvas>')
+    .append('<canvas id="high-cloud-chart" class="detailed-chart"></canvas>')
+    .append('<canvas id="mid-cloud-chart" class="detailed-chart"></canvas>')
+    .append('<canvas id="low-cloud-chart" class="detailed-chart"></canvas>');
 };
 
 const addArray = (arr) => {
@@ -252,11 +259,10 @@ const addArray = (arr) => {
 };
 
 const displayDetailedWeather = () => {
-  // detailed weather
-
+  // converts ISO 8601 date & time to 24 hour notation in an array
   let timeData = weatherData.hourly.time.map(
     (element) => element.split("T")[1]
-  ); // converts ISO 8601 date & time to 24 hour notation in an array
+  );
   let rainArr = addArray(weatherData.hourly.rain);
   let snowArr = addArray(weatherData.hourly.snowfall);
   let showersArr = addArray(weatherData.hourly.showers);
@@ -270,18 +276,21 @@ const displayDetailedWeather = () => {
           label: "Temperature",
           data: weatherData.hourly.temperature_2m,
           borderColor: "red",
+          borderJoinStyle: "round",
           fill: false,
         },
         {
           label: "Feels Like",
           data: weatherData.hourly.apparent_temperature,
           borderColor: "yellow",
+          borderJoinStyle: "round",
           fill: false,
         },
         {
           label: "Dew Point",
           data: weatherData.hourly.dew_point_2m,
           borderColor: "blue",
+          borderJoinStyle: "round",
           fill: false,
         },
       ],
@@ -296,6 +305,15 @@ const displayDetailedWeather = () => {
           },
         },
       },
+      plugins: {
+        title: {
+          display: true,
+          text: "Temperature & Dew Point",
+        },
+        legend: {
+          position: "bottom",
+        },
+      },
     },
   });
 
@@ -308,18 +326,21 @@ const displayDetailedWeather = () => {
           label: "Snow (cm)",
           data: snowArr,
           borderColor: "grey",
+          borderJoinStyle: "round",
           fill: false,
         },
         {
           label: "Rain (mm)",
           data: rainArr,
           borderColor: "blue",
+          borderJoinStyle: "round",
           fill: false,
         },
         {
           label: "Showers (mm)",
           data: showersArr,
           borderColor: "black",
+          borderJoinStyle: "round",
           fill: false,
         },
       ],
@@ -337,6 +358,33 @@ const displayDetailedWeather = () => {
     },
   });
 
+  new Chart($("#freeze-chart"), {
+    type: "line",
+    data: {
+      labels: timeData,
+      datasets: [
+        {
+          label: "Freezing Level",
+          data: weatherData.hourly.freezing_level_height,
+          borderColor: "grey",
+          borderJoinStyle: "round",
+          fill: false,
+        },
+      ],
+    },
+    options: {
+      scales: {
+        y: {
+          title: {
+            display: true,
+            align: "center",
+            text: `Altitude (${weatherData.hourly_units.freezing_level_height})`,
+          },
+        },
+      },
+    },
+  });
+
   new Chart($("#cloud-chart"), {
     type: "line",
     data: {
@@ -345,25 +393,89 @@ const displayDetailedWeather = () => {
         {
           label: "Total",
           data: weatherData.hourly.cloud_cover,
-          borderColor: "red",
+          borderColor: "black",
+          borderJoinStyle: "round",
           fill: false,
         },
+      ],
+    },
+    options: {
+      scales: {
+        y: {
+          title: {
+            display: true,
+            align: "center",
+            text: `Cloud Cover (${weatherData.hourly_units.cloud_cover})`,
+          },
+        },
+      },
+    },
+  });
+
+  new Chart($("#high-cloud-chart"), {
+    type: "line",
+    data: {
+      labels: timeData,
+      datasets: [
         {
-          label: "High",
+          label: "High Cloud Cover",
           data: weatherData.hourly.cloud_cover_high,
           borderColor: "grey",
+          borderJoinStyle: "round",
           fill: false,
         },
+      ],
+    },
+    options: {
+      scales: {
+        y: {
+          title: {
+            display: true,
+            align: "center",
+            text: `Cloud Cover (${weatherData.hourly_units.cloud_cover})`,
+          },
+        },
+      },
+    },
+  });
+
+  new Chart($("#mid-cloud-chart"), {
+    type: "line",
+    data: {
+      labels: timeData,
+      datasets: [
         {
-          label: "Mid",
+          label: "Mid Cloud Cover",
           data: weatherData.hourly.cloud_cover_mid,
-          borderColor: "blue",
+          borderColor: "grey",
+          borderJoinStyle: "round",
           fill: false,
         },
+      ],
+    },
+    options: {
+      scales: {
+        y: {
+          title: {
+            display: true,
+            align: "center",
+            text: `Cloud Cover (${weatherData.hourly_units.cloud_cover})`,
+          },
+        },
+      },
+    },
+  });
+
+  new Chart($("#low-cloud-chart"), {
+    type: "line",
+    data: {
+      labels: timeData,
+      datasets: [
         {
-          label: "Low",
+          label: "Low Cloud Cover",
           data: weatherData.hourly.cloud_cover_low,
-          borderColor: "black",
+          borderColor: "grey",
+          borderJoinStyle: "round",
           fill: false,
         },
       ],
@@ -390,12 +502,14 @@ const displayDetailedWeather = () => {
           label: "Wind Speed",
           data: weatherData.hourly.wind_speed_10m,
           borderColor: "red",
+          borderJoinStyle: "round",
           fill: false,
         },
         {
           label: "Wind Gusts",
           data: weatherData.hourly.wind_gusts_10m,
           borderColor: "grey",
+          borderJoinStyle: "round",
           fill: false,
         },
       ],

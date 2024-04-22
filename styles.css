@@ -101,3 +101,11 @@ h4 {
   align-items: center;
   border: 1px solid black;
 }
+
+#detailed-forecast > div {
+  margin-bottom: 10px;
+  border: 2px solid black;
+  padding-top: calc(var(--bs-gutter-x) * 0.5);
+  padding-bottom: calc(var(--bs-gutter-x) * 0.5);
+  border-radius: 10px;
+}
