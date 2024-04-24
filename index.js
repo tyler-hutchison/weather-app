@@ -200,6 +200,10 @@ const displayData = () => {
 
   $.each(sevenDays, function (dayIndex, day) {
     let dailyIcon = getSymbol(daily.weather_code[dayIndex]);
+    console.log(dailyIcon);
+    if (dailyIcon === "snow" && daily.temperature_2m_max[dayIndex] > 3) {
+      dailyIcon = "showers";
+    }
     let divID = day.toLowerCase();
     let $container = $(`<div id="${divID}-forecast"></div>`);
     $container
@@ -224,8 +228,10 @@ const displayData = () => {
     $(".forecast-table").append($container);
   });
 
+  //detailed weather
   $(".detailed-forecast-container").remove();
-  $("#detailed-forecast")
+  $("#detailed-forecast").append('<div class="detailed-forecast-container"></div>');
+  $(".detailed-forecast-container")
     .append(
       '<div class="detailed-temp-container"><canvas id="temperature-chart" class="detailed-chart"></canvas></div>'
     )
@@ -266,6 +272,9 @@ const displayDetailedWeather = () => {
   let rainArr = addArray(weatherData.hourly.rain);
   let snowArr = addArray(weatherData.hourly.snowfall);
   let showersArr = addArray(weatherData.hourly.showers);
+  let windVectors = weatherData.hourly.wind_direction_10m;
+  const vectorImg = new Image(15, 15);
+  vectorImg.src = "images/up_5436369.png";
 
   new Chart($("#temperature-chart"), {
     type: "line",
@@ -298,12 +307,14 @@ const displayDetailedWeather = () => {
     options: {
       scales: {
         y: {
+          display: true,
+          position: "left",
           title: {
             display: true,
             align: "center",
             text: `Temperature (${weatherData.hourly_units.temperature_2m})`,
           },
-        },
+        }
       },
       plugins: {
         title: {
@@ -503,6 +514,7 @@ const displayDetailedWeather = () => {
           data: weatherData.hourly.wind_speed_10m,
           borderColor: "red",
           borderJoinStyle: "round",
+          pointStyle: vectorImg,
           fill: false,
         },
         {
@@ -510,6 +522,7 @@ const displayDetailedWeather = () => {
           data: weatherData.hourly.wind_gusts_10m,
           borderColor: "grey",
           borderJoinStyle: "round",
+          pointStyle: "circle",
           fill: false,
         },
       ],
@@ -524,6 +537,11 @@ const displayDetailedWeather = () => {
           },
         },
       },
+      elements: {
+        point: {
+          pointRotation: windVectors,
+        }
+      },
     },
   });
 };
@@ -533,6 +551,10 @@ const displayDetailedWeather = () => {
 
 - change weather icon logic
   -no sun and cloud condition
-- add detailed forecast
+- tweak detailed forecast
+  - all legends at bottom
+  - all y-axis on both sides
+  - change date format or include days as well as time
+  - condense cloud section
 - make it look pretty
 */
