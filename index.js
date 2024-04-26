@@ -247,10 +247,11 @@ const displayData = () => {
     );
 
   $(".detailed-cloud-container")
-    .append('<canvas id="cloud-chart" class="detailed-chart"></canvas>')
-    .append('<canvas id="high-cloud-chart" class="detailed-chart"></canvas>')
-    .append('<canvas id="mid-cloud-chart" class="detailed-chart"></canvas>')
-    .append('<canvas id="low-cloud-chart" class="detailed-chart"></canvas>');
+    .append('<div class="cloud-chart"><canvas id="cloud-chart" class="detailed-chart"></canvas></div>')
+    .append('<div class="cloud-chart"><canvas id="high-cloud-chart" class="detailed-chart"></canvas></div>')
+    .append('<div class="cloud-chart"><canvas id="mid-cloud-chart" class="detailed-chart"></canvas></div>')
+    .append('<div class="cloud-chart"><canvas id="low-cloud-chart" class="detailed-chart"></canvas></div>')
+    .append('<p class="cloud-info">*Low: < 3000m, Mid: 3000 - 8000m, High: > 8000m</p>');
 };
 
 const addArray = (arr) => {
@@ -275,6 +276,7 @@ const displayDetailedWeather = () => {
   let windVectors = weatherData.hourly.wind_direction_10m;
   const vectorImg = new Image(15, 15);
   vectorImg.src = "images/up_5436369.png";
+
 
   new Chart($("#temperature-chart"), {
     type: "line",
@@ -305,6 +307,8 @@ const displayDetailedWeather = () => {
       ],
     },
     options: {
+      responsive: true,
+      maintainAspectRatio: false,
       scales: {
         y: {
           display: true,
@@ -357,6 +361,8 @@ const displayDetailedWeather = () => {
       ],
     },
     options: {
+      responsive: true,
+      maintainAspectRatio: false,
       scales: {
         y: {
           title: {
@@ -364,6 +370,15 @@ const displayDetailedWeather = () => {
             align: "center",
             text: `Precipitation (${weatherData.hourly_units.rain}/${weatherData.hourly_units.snowfall})`,
           },
+        },
+      },
+      plugins: {
+        title: {
+          display: true,
+          text: "Precipitation",
+        },
+        legend: {
+          position: "bottom",
         },
       },
     },
@@ -384,6 +399,8 @@ const displayDetailedWeather = () => {
       ],
     },
     options: {
+      responsive: true,
+      maintainAspectRatio: false,
       scales: {
         y: {
           title: {
@@ -391,6 +408,16 @@ const displayDetailedWeather = () => {
             align: "center",
             text: `Altitude (${weatherData.hourly_units.freezing_level_height})`,
           },
+        },
+      },
+      plugins: {
+        title: {
+          display: true,
+          text: "Freezing Level",
+        },
+        legend: {
+          display: false,
+          position: "bottom",
         },
       },
     },
@@ -411,13 +438,25 @@ const displayDetailedWeather = () => {
       ],
     },
     options: {
+      responsive: true,
+      maintainAspectRatio: false,
       scales: {
         y: {
           title: {
             display: true,
             align: "center",
-            text: `Cloud Cover (${weatherData.hourly_units.cloud_cover})`,
+            text: `Total (${weatherData.hourly_units.cloud_cover})`,
           },
+        },
+      },
+      plugins: {
+        title: {
+          display: true,
+          text: "Cloud Cover",
+        },
+        legend: {
+          display: false,
+          position: "bottom",
         },
       },
     },
@@ -438,13 +477,21 @@ const displayDetailedWeather = () => {
       ],
     },
     options: {
+      responsive: true,
+      maintainAspectRatio: false,
       scales: {
         y: {
           title: {
             display: true,
             align: "center",
-            text: `Cloud Cover (${weatherData.hourly_units.cloud_cover})`,
+            text: `High (${weatherData.hourly_units.cloud_cover})`,
           },
+        },
+      },
+      plugins: {
+        legend: {
+          display: false,
+          position: "bottom",
         },
       },
     },
@@ -465,13 +512,21 @@ const displayDetailedWeather = () => {
       ],
     },
     options: {
+      responsive: true,
+      maintainAspectRatio: false,
       scales: {
         y: {
           title: {
             display: true,
             align: "center",
-            text: `Cloud Cover (${weatherData.hourly_units.cloud_cover})`,
+            text: `Mid (${weatherData.hourly_units.cloud_cover})`,
           },
+        },
+      },
+      plugins: {
+        legend: {
+          display: false,
+          position: "bottom",
         },
       },
     },
@@ -492,13 +547,21 @@ const displayDetailedWeather = () => {
       ],
     },
     options: {
+      responsive: true,
+      maintainAspectRatio: false,
       scales: {
         y: {
           title: {
             display: true,
             align: "center",
-            text: `Cloud Cover (${weatherData.hourly_units.cloud_cover})`,
+            text: `Low (${weatherData.hourly_units.cloud_cover})`,
           },
+        },
+      },
+      plugins: {
+        legend: {
+          display: false,
+          position: "bottom",
         },
       },
     },
@@ -528,6 +591,8 @@ const displayDetailedWeather = () => {
       ],
     },
     options: {
+      responsive: true,
+      maintainAspectRatio: false,
       scales: {
         y: {
           title: {
@@ -535,6 +600,15 @@ const displayDetailedWeather = () => {
             align: "center",
             text: `Wind Speed (${weatherData.hourly_units.wind_speed_10m})`,
           },
+        },
+      },
+      plugins: {
+        title: {
+          display: true,
+          text: "Wind",
+        },
+        legend: {
+          position: "bottom",
         },
       },
       elements: {
