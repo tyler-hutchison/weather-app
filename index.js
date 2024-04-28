@@ -277,7 +277,6 @@ const displayDetailedWeather = () => {
   const vectorImg = new Image(15, 15);
   vectorImg.src = "images/up_5436369.png";
 
-
   new Chart($("#temperature-chart"), {
     type: "line",
     data: {
@@ -321,6 +320,20 @@ const displayDetailedWeather = () => {
         }
       },
       plugins: {
+        zoom: {
+          pan: {
+            enabled: true
+          },
+          zoom: {
+            wheel: {
+              enabled: true,
+            },
+            pinch: {
+              enabled: true
+            },
+            mode: 'xy',
+          }
+        },
         title: {
           display: true,
           text: "Temperature & Dew Point",
@@ -373,6 +386,20 @@ const displayDetailedWeather = () => {
         },
       },
       plugins: {
+        zoom: {
+          pan: {
+            enabled: true
+          },
+          zoom: {
+            wheel: {
+              enabled: true,
+            },
+            pinch: {
+              enabled: true
+            },
+            mode: 'xy',
+          }
+        },
         title: {
           display: true,
           text: "Precipitation",
@@ -411,6 +438,20 @@ const displayDetailedWeather = () => {
         },
       },
       plugins: {
+        zoom: {
+          pan: {
+            enabled: true
+          },
+          zoom: {
+            wheel: {
+              enabled: true,
+            },
+            pinch: {
+              enabled: true
+            },
+            mode: 'xy',
+          }
+        },
         title: {
           display: true,
           text: "Freezing Level",
@@ -450,6 +491,20 @@ const displayDetailedWeather = () => {
         },
       },
       plugins: {
+        zoom: {
+          pan: {
+            enabled: true
+          },
+          zoom: {
+            wheel: {
+              enabled: true,
+            },
+            pinch: {
+              enabled: true
+            },
+            mode: 'xy',
+          }
+        },
         title: {
           display: true,
           text: "Cloud Cover",
@@ -489,6 +544,20 @@ const displayDetailedWeather = () => {
         },
       },
       plugins: {
+        zoom: {
+          pan: {
+            enabled: true
+          },
+          zoom: {
+            wheel: {
+              enabled: true,
+            },
+            pinch: {
+              enabled: true
+            },
+            mode: 'xy',
+          }
+        },
         legend: {
           display: false,
           position: "bottom",
@@ -524,6 +593,21 @@ const displayDetailedWeather = () => {
         },
       },
       plugins: {
+        zoom: {
+          pan: {
+              enabled: true
+          },
+          zoom: {
+            
+            wheel: {
+              enabled: true,
+            },
+            pinch: {
+              enabled: true
+            },
+            mode: 'xy',
+          }
+        },
         legend: {
           display: false,
           position: "bottom",
@@ -559,6 +643,20 @@ const displayDetailedWeather = () => {
         },
       },
       plugins: {
+        zoom: {
+          pan: {
+            enabled: true
+          },
+          zoom: {
+            wheel: {
+              enabled: true,
+            },
+            pinch: {
+              enabled: true
+            },
+            mode: 'xy',
+          }
+        },
         legend: {
           display: false,
           position: "bottom",
@@ -603,6 +701,20 @@ const displayDetailedWeather = () => {
         },
       },
       plugins: {
+        zoom: {
+          pan: {
+            enabled: true
+          },
+          zoom: {
+            wheel: {
+              enabled: true,
+            },
+            pinch: {
+              enabled: true
+            },
+            mode: 'xy',
+          }
+        },
         title: {
           display: true,
           text: "Wind",
