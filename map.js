@@ -51,4 +51,5 @@ geocoder.on("markgeocode", async (e) => {
     }
     await getWeather(e.geocode.center.lat, e.geocode.center.lng);
     displayData();
+    displayDetailedWeather();
 });

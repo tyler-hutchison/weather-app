@@ -84,21 +84,32 @@ const displayData = () => {
   let { current, current_units, daily, daily_units, hourly, hourly_units } =
     weatherData;
 
+  //  current location info
+  $('.model-info').remove();
+  $("#location-finder").append('<div class="model-info"></div>');
+  $('.model-info').append('<div class="current-location"></div>');
+  $(".current-location")
+    .append('<h4>Model Information</h4>')
+    .append(
+      `<p>Location: ${weatherData.latitude}, ${weatherData.longitude}, ${weatherData.elevation}m ASL</p>`
+    )
+    .append(
+      `<p>Time: ${current.time} ${weatherData.timezone}, ${
+        weatherData.timezone_abbreviation
+      }, UTC${weatherData.utc_offset_seconds / 3600}</p>`
+    );
+
   //  add current weather table
   $(".current-weather-container").remove();
-  $("#current-weather").append('<div class="current-weather-container"></div>');
+  $("#current-weather").append('<div class="current-weather-container container"></div>');
   $(".current-weather-container").append(
-    '<div class="current-weather-table"></div>'
+    '<div class="current-weather-table row"></div>'
   );
   $(".current-weather-table")
-    .append('<div class="current-icon"></div>')
-    .append('<div class="current-location"></div>')
-    .append('<div class="current-condition"></div>')
-    .append('<div class="current-temp"></div>')
-    .append('<div class="current-wind"></div>');
+    .append('<div class="current-icon col-md-6"></div>')
+    .append('<div class="current-weather-stats col-md-6"></div>');
 
   //  current weather icon and temperature
-
   let icon = getSymbol(current.weather_code);
 
   if (icon === "sun" && current.is_day !== 1) {
@@ -115,71 +126,72 @@ const displayData = () => {
 
   $(".current-icon")
     .append('<div class="current-icon-container"></div>')
-    .append(`<p>${currentTempDisplay}</p>`)
-    .append(`<p>Feels like: ${apparentTempDisplay}</p>`)
-    .append(
-      '<p class="credit">Icon by <a href="https://www.flaticon.com/authors/freepik" target="_blank">Freepik</a><p>'
-    );
+    .append(`<p id="current-temp">${currentTempDisplay}</p>`)
+    .append(`<p id="current-feels">Feels like: ${apparentTempDisplay}</p>`);
   $(".current-icon-container").append(
     `<img class="weather-icon" id="current-weather-icon" src="/weather-app/images/${icon}.png" alt="weather-icon">`
   );
 
   //  more specific current temperature info
   let newstring = current.time.replace(/:\d{2}/, ":00"); //  replace any minute value with 00
-
   let hourlyIndex = hourly.time.indexOf(newstring); //  get hourlyIndex for hourly data relating to current hour
-
-  $(".current-temp")
-    .append(
-      `<p>Temperature: ${current.temperature_2m}${current_units.temperature_2m}</p>`
-    )
-    .append(
-      `<p>Dew point: ${hourly.dew_point_2m[hourlyIndex]}${hourly_units.dew_point_2m}</p>`
-    )
-    .append(
-      `<p>Humidity: ${current.relative_humidity_2m}${current_units.relative_humidity_2m}</p>`
-    );
-
-  //  current location info
-  $(".current-location")
-    .append(
-      `<p>Location: ${weatherData.latitude}, ${weatherData.longitude}, ${weatherData.elevation}m ASL</p>`
-    )
-    .append(
-      `<p>Time: ${current.time} ${weatherData.timezone}, ${
-        weatherData.timezone_abbreviation
-      }, UTC${weatherData.utc_offset_seconds / 3600}</p>`
-    );
-
-  //  current condition info
-  $(".current-condition")
-    .append(
-      `<p>Freezing Level: ${hourly.freezing_level_height[hourlyIndex]}${hourly_units.freezing_level_height}</p>`
-    )
-    .append(
-      `<p>Cloud Cover: ${current.cloud_cover}${current_units.cloud_cover}</p>`
-    )
-    .append(
-      `<p>Visibility: ${hourly.visibility[hourlyIndex] / 1000} K${
-        hourly_units.visibility
-      }</p>`
-    );
-
-  //  current wind info
   let windDirStr = degToCompass(current.wind_direction_10m);
 
-  $(".current-wind")
+  // add stats to table
+  $(".current-weather-stats")
     .append(
-      `<p>Wind: ${current.wind_speed_10m} ${current_units.wind_speed_10m} ${windDirStr}</p>`
+      `<div class="current-weather-stat">
+        <p>Temperature</p>
+        <p>${current.temperature_2m}${current_units.temperature_2m}</p>
+      </div>`
     )
     .append(
-      `<p>Wind Gusts: ${current.wind_gusts_10m}${current_units.wind_gusts_10m}</p>`
+      `<div class="current-weather-stat">
+        <p>Dew point</p>
+        <p>${hourly.dew_point_2m[hourlyIndex]}${hourly_units.dew_point_2m}</p>
+      </div>`
+    )
+    .append(
+      `<div class="current-weather-stat">
+          <p>Humidity</p>
+          <p>${current.relative_humidity_2m}${current_units.relative_humidity_2m}</p>
+        </div>`
+    )
+    .append(
+      `<div class="current-weather-stat">
+        <p>Freezing Level</p>
+        <p>${hourly.freezing_level_height[hourlyIndex]}${hourly_units.freezing_level_height}</p>
+      </div>`
+    )
+    .append(
+      `<div class="current-weather-stat">
+        <p>Cloud Cover</p>
+        <p>${current.cloud_cover}${current_units.cloud_cover}</p>
+      </div>`
+    )
+    .append(
+      `<div class="current-weather-stat">
+        <p>Visibility</p>
+        <p>${hourly.visibility[hourlyIndex] / 1000} K${hourly_units.visibility}</p>
+      </div>`
+    )
+    .append(
+      `<div class="current-weather-stat">
+        <p>Wind</p>
+        <p>${current.wind_speed_10m} ${current_units.wind_speed_10m} ${windDirStr}</p>
+      </div>`
+    )
+    .append(
+      `<div class="current-weather-stat">
+        <p>Wind Gusts</p>
+        <p>${current.wind_gusts_10m}${current_units.wind_gusts_10m}</p>
+      </div>`
     );
 
   // 7 day forecast
   $(".forecast-container").remove();
-  $("#forecast").append('<div class="forecast-container"></div>');
-  $(".forecast-container").append('<div class="forecast-table"></div>');
+  $("#forecast").append('<div class="forecast-container container"></div>');
+  $(".forecast-container").append('<div class="forecast-table row"></div>');
 
   const daysOfTheWeek = [
     "Sunday",
@@ -205,11 +217,10 @@ const displayData = () => {
       dailyIcon = "showers";
     }
     let divID = day.toLowerCase();
-    let $container = $(`<div id="${divID}-forecast"></div>`);
+    let $container = $(`<div id="${divID}-forecast" class="col-xs-12 col-lg"></div>`);
     $container
-      .append(`<p>${day.slice(0, 3)} </p>`)
+      .append(`<p class=""small-day>${day.slice(0, 3)} </p>`)
       .append(`<div class="daily-icon-container"></div>`)
-      //.append(`<p>${daily.weather_code[dayIndex]}</p>`)
       .append(
         `<p><b>${daily.temperature_2m_max[dayIndex]}</b> / ${daily.temperature_2m_min[dayIndex]}${daily_units.temperature_2m_max}</p>`
       );
