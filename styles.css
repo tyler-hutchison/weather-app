@@ -12,10 +12,6 @@ body {
   padding: 0;
 }
 
-h4 {
-  margin-bottom: 20px;
-}
-
 .current-weather-table > div > p {
   margin: 5px;
 }
@@ -121,4 +117,15 @@ h4 {
 
 .socials > a {
   margin: 0 10px;
+}
+
+.hidden {
+  display: none;
+}
+
+.dropdown {
+  width: 100%;
+  text-align: start;
+  background-color: white;
+  border: none;
 }

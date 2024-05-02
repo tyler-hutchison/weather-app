@@ -84,12 +84,16 @@ const displayData = () => {
   let { current, current_units, daily, daily_units, hourly, hourly_units } =
     weatherData;
 
+  if (weatherData) {
+    $('.weather-section').removeClass('hidden');
+  }
+
   //  current location info
-  $('.model-info').remove();
-  $("#location-finder").append('<div class="model-info"></div>');
-  $('.model-info').append('<div class="current-location"></div>');
-  $(".current-location")
-    .append('<h4>Model Information</h4>')
+  $('#model-info').remove();
+  $("#location-finder").append('<div id="model-info"></div>');
+  $('#model-info').append('<div class="current-location"></div>');
+  $(".current-location").append('<h4>Model Information</h4>');
+  $('.current-location').append('<div></div>')  
     .append(
       `<p>Location: ${weatherData.latitude}, ${weatherData.longitude}, ${weatherData.elevation}m ASL</p>`
     )
@@ -190,7 +194,7 @@ const displayData = () => {
 
   // 7 day forecast
   $(".forecast-container").remove();
-  $("#forecast").append('<div class="forecast-container container"></div>');
+  $("#forecast").append('<div class="forecast-container container hidden"></div>');
   $(".forecast-container").append('<div class="forecast-table row"></div>');
 
   const daysOfTheWeek = [
@@ -241,7 +245,7 @@ const displayData = () => {
 
   //detailed weather
   $(".detailed-forecast-container").remove();
-  $("#detailed-forecast").append('<div class="detailed-forecast-container"></div>');
+  $("#detailed-forecast").append('<div class="detailed-forecast-container hidden"></div>');
   $(".detailed-forecast-container")
     .append(
       '<div class="detailed-temp-container"><canvas id="temperature-chart" class="detailed-chart"></canvas></div>'
@@ -743,15 +747,17 @@ const displayDetailedWeather = () => {
   });
 };
 
+$('.dropdown').click(function(){
+  $(this).siblings().toggleClass('hidden');
+});
+
 /*
   TO DO:
 
 - change weather icon logic
   -no sun and cloud condition
 - tweak detailed forecast
-  - all legends at bottom
   - all y-axis on both sides
   - change date format or include days as well as time
-  - condense cloud section
 - make it look pretty
 */
