@@ -7,7 +7,6 @@ const getWeather = async (lat, lng) => {
     );
     const data = await response.json();
     Object.assign(weatherData, data);
-    console.log("weather data: ", weatherData);
   } catch (err) {
     console.log(err);
   }
@@ -216,14 +215,13 @@ const displayData = () => {
 
   $.each(sevenDays, function (dayIndex, day) {
     let dailyIcon = getSymbol(daily.weather_code[dayIndex]);
-    console.log(dailyIcon);
     if (dailyIcon === "snow" && daily.temperature_2m_max[dayIndex] > 3) {
       dailyIcon = "showers";
     }
     let divID = day.toLowerCase();
-    let $container = $(`<div id="${divID}-forecast" class="col-xs-12 col-lg"></div>`);
+    let $container = $(`<div id="${divID}-forecast" class="col-xs-12 col-sm-6 col-lg-3 col-xl"></div>`);
     $container
-      .append(`<p class=""small-day>${day.slice(0, 3)} </p>`)
+      .append(`<p class="small-day">${day}</p>`)
       .append(`<div class="daily-icon-container"></div>`)
       .append(
         `<p><b>${daily.temperature_2m_max[dayIndex]}</b> / ${daily.temperature_2m_min[dayIndex]}${daily_units.temperature_2m_max}</p>`
@@ -245,7 +243,7 @@ const displayData = () => {
 
   //detailed weather
   $(".detailed-forecast-container").remove();
-  $("#detailed-forecast").append('<div class="detailed-forecast-container hidden"></div>');
+  $("#detailed-forecast").append('<div class="detailed-forecast-container container hidden"></div>');
   $(".detailed-forecast-container")
     .append(
       '<div class="detailed-temp-container"><canvas id="temperature-chart" class="detailed-chart"></canvas></div>'
@@ -749,6 +747,11 @@ const displayDetailedWeather = () => {
 
 $('.dropdown').click(function(){
   $(this).siblings().toggleClass('hidden');
+  if (!$(this).siblings().hasClass('hidden')) {
+    $(this).children('.dropdown-arrow').css('rotate', '90deg');
+  } else {
+    $(this).children('.dropdown-arrow').css('rotate', '0deg');
+  }
 });
 
 /*
@@ -760,4 +763,5 @@ $('.dropdown').click(function(){
   - all y-axis on both sides
   - change date format or include days as well as time
 - make it look pretty
+- add modal on page load
 */

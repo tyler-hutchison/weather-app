@@ -16,10 +16,6 @@ body {
   margin: 5px;
 }
 
-.current-weather-table {
-  border: 1px solid black;
-}
-
 .current-icon {
   text-align: center;
 }
@@ -79,20 +75,12 @@ body {
 .forecast-table > div {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  border: 1px solid black;
 }
 
-.day-small {
+.small-day {
   margin-top: 10px;
   font-weight: bold;
-}
-
-#detailed-forecast > div {
-  margin-bottom: 10px;
-  padding-top: calc(var(--bs-gutter-x) * 0.5);
-  padding-bottom: calc(var(--bs-gutter-x) * 0.5);
 }
 
 .detailed-forecast-container > div {
@@ -128,4 +116,23 @@ body {
   text-align: start;
   background-color: white;
   border: none;
+  text-decoration: none;
+}
+
+.dropdown > * {
+  display: inline-block;
+  margin: 0;
+}
+
+.dropdown-arrow {
+	width: 0;
+	height: 0;
+	border-top: 5px solid transparent;
+	border-left: 10px solid #555;
+	border-bottom: 5px solid transparent;
+  margin-bottom: 3px;
+}
+
+.container {
+  margin-top: 10px;
 }
