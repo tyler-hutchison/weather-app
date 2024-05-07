@@ -857,6 +857,16 @@ $('.dropdown').click(function(){
   }
 });
 
+window.onload = (e) => {
+  setTimeout(() => {
+    $('#modal').removeClass('hidden');
+  }, 1000);
+}
+
+$('.modal-close').click(function(){
+  $('#modal').addClass('hidden');
+});
+
 /*
   TO DO:
 
