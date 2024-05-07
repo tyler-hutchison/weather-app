@@ -1,6 +1,10 @@
 :root {
-  --dark-grey: #0d0d0d;
+  --dark-grey: #1a1a1a;
   --grey: #333333;
+  --light-grey: #a6a6a6;
+  --graph-primary: #1aa3ff;
+  --graph-secondary: #00e68a;
+  --graph-tertiary: #bf00ff;
 }
 
 * {
@@ -10,6 +14,8 @@
 body {
   margin: 0;
   padding: 0;
+  background-color: var(--dark-grey);
+  color: white;
 }
 
 .current-weather-table > div > p {
@@ -42,13 +48,16 @@ body {
 #map {
   height: 400px;
   margin-bottom: 10px;
+  width: 98%;
+  margin: 10px auto;
+  border-radius: 5px;
 }
 
 .weather-section {
   padding: 20px;
   margin-bottom: 10px;
-  border: 2px solid black;
   border-radius: 10px;
+  background-color: var(--grey);
 }
 
 .current-icon-container,
@@ -66,6 +75,7 @@ body {
 .weather-icon {
   height: 100%;
   object-fit: contain;
+  filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(149deg) brightness(101%) contrast(103%);
 }
 
 .credit {
@@ -86,7 +96,7 @@ body {
 .detailed-forecast-container > div {
   margin-bottom: 20px;
   min-height: 350px;
-  border: 2px solid black;
+  border: 2px solid var(--light-grey);
   border-radius: 10px;
 }
 
@@ -96,15 +106,22 @@ body {
 
 .cloud-info {
   text-align: center;
+  margin: 8px 0;
 }
 
 .footer {
   text-align: center;
-  margin-bottom: 20px;
+  margin: 20px auto;
 }
 
 .socials > a {
   margin: 0 10px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.socials > a:hover {
+  color: var(--light-grey);
 }
 
 .hidden {
@@ -114,9 +131,10 @@ body {
 .dropdown {
   width: 100%;
   text-align: start;
-  background-color: white;
+  background-color: transparent;
   border: none;
   text-decoration: none;
+  color: inherit;
 }
 
 .dropdown > * {
@@ -131,6 +149,7 @@ body {
 	border-left: 10px solid #555;
 	border-bottom: 5px solid transparent;
   margin-bottom: 3px;
+  filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(149deg) brightness(101%) contrast(103%);
 }
 
 .container {

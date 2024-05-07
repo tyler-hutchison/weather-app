@@ -249,6 +249,9 @@ const displayData = () => {
       '<div class="detailed-temp-container"><canvas id="temperature-chart" class="detailed-chart"></canvas></div>'
     )
     .append(
+      '<div class="detailed-humidity-container"><canvas id="humidity-chart" class="detailed-chart"></canvas></div>'
+    )
+    .append(
       '<div class="detailed-precip-container"><canvas id="precipitation-chart" class="detailed-chart"></canvas></div>'
     )
     .append(
@@ -289,6 +292,53 @@ const displayDetailedWeather = () => {
   let windVectors = weatherData.hourly.wind_direction_10m;
   const vectorImg = new Image(15, 15);
   vectorImg.src = "images/up_5436369.png";
+  const chartPrimaryColor = '#1aa3ff';
+  const chartSecondaryColor = '#33d6ff';
+  const chartTertiaryColor = '#cccccc';
+  const config = {
+    type: 'line',
+    data: {},
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          display: true,
+          position: "left",
+          title: {
+            display: true,
+            align: "center",
+            text: "Scale Title",
+          },
+        }
+      },
+      plugins: {
+        zoom: {
+          pan: {
+            enabled: true
+          },
+          zoom: {
+            wheel: {
+              enabled: true,
+            },
+            pinch: {
+              enabled: true
+            },
+            mode: 'xy',
+          }
+        },
+        title: {
+          display: true,
+          text: "Chart Title",
+        },
+        legend: {
+          position: "bottom",
+        },
+      },
+    }
+  };
+
+  Chart.defaults.color = '#ffffff';
 
   new Chart($("#temperature-chart"), {
     type: "line",
@@ -298,21 +348,21 @@ const displayDetailedWeather = () => {
         {
           label: "Temperature",
           data: weatherData.hourly.temperature_2m,
-          borderColor: "red",
+          borderColor: chartPrimaryColor,
           borderJoinStyle: "round",
           fill: false,
         },
         {
           label: "Feels Like",
           data: weatherData.hourly.apparent_temperature,
-          borderColor: "yellow",
+          borderColor: chartSecondaryColor,
           borderJoinStyle: "round",
           fill: false,
         },
         {
           label: "Dew Point",
           data: weatherData.hourly.dew_point_2m,
-          borderColor: "blue",
+          borderColor: chartTertiaryColor,
           borderJoinStyle: "round",
           fill: false,
         },
@@ -358,6 +408,59 @@ const displayDetailedWeather = () => {
     },
   });
 
+  new Chart($("#humidity-chart"), {
+    type: "line",
+    data: {
+      labels: timeData,
+      datasets: [
+        {
+          label: "Relative Humidity",
+          data: weatherData.hourly.relative_humidity_2m,
+          borderColor: chartPrimaryColor,
+          borderJoinStyle: "round",
+          fill: false,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          title: {
+            display: true,
+            align: "center",
+            text: `Humidity (${weatherData.hourly_units.relative_humidity_2m})`,
+          },
+        },
+      },
+      plugins: {
+        zoom: {
+          pan: {
+            enabled: true
+          },
+          zoom: {
+            wheel: {
+              enabled: true,
+            },
+            pinch: {
+              enabled: true
+            },
+            mode: 'xy',
+          }
+        },
+        title: {
+          display: true,
+          text: "Relative Humidity",
+        },
+        legend: {
+          display: false,
+          position: "bottom",
+        },
+      },
+    },
+  });
+
   new Chart($("#precipitation-chart"), {
     type: "line",
     data: {
@@ -366,21 +469,21 @@ const displayDetailedWeather = () => {
         {
           label: "Snow (cm)",
           data: snowArr,
-          borderColor: "grey",
+          borderColor: chartTertiaryColor,
           borderJoinStyle: "round",
           fill: false,
         },
         {
           label: "Rain (mm)",
           data: rainArr,
-          borderColor: "blue",
+          borderColor: chartPrimaryColor,
           borderJoinStyle: "round",
           fill: false,
         },
         {
           label: "Showers (mm)",
           data: showersArr,
-          borderColor: "black",
+          borderColor: chartSecondaryColor,
           borderJoinStyle: "round",
           fill: false,
         },
@@ -432,7 +535,7 @@ const displayDetailedWeather = () => {
         {
           label: "Freezing Level",
           data: weatherData.hourly.freezing_level_height,
-          borderColor: "grey",
+          borderColor: chartPrimaryColor,
           borderJoinStyle: "round",
           fill: false,
         },
@@ -485,7 +588,7 @@ const displayDetailedWeather = () => {
         {
           label: "Total",
           data: weatherData.hourly.cloud_cover,
-          borderColor: "black",
+          borderColor: chartPrimaryColor,
           borderJoinStyle: "round",
           fill: false,
         },
@@ -538,7 +641,7 @@ const displayDetailedWeather = () => {
         {
           label: "High Cloud Cover",
           data: weatherData.hourly.cloud_cover_high,
-          borderColor: "grey",
+          borderColor: chartTertiaryColor,
           borderJoinStyle: "round",
           fill: false,
         },
@@ -587,7 +690,7 @@ const displayDetailedWeather = () => {
         {
           label: "Mid Cloud Cover",
           data: weatherData.hourly.cloud_cover_mid,
-          borderColor: "grey",
+          borderColor: chartTertiaryColor,
           borderJoinStyle: "round",
           fill: false,
         },
@@ -637,7 +740,7 @@ const displayDetailedWeather = () => {
         {
           label: "Low Cloud Cover",
           data: weatherData.hourly.cloud_cover_low,
-          borderColor: "grey",
+          borderColor: chartTertiaryColor,
           borderJoinStyle: "round",
           fill: false,
         },
@@ -686,7 +789,7 @@ const displayDetailedWeather = () => {
         {
           label: "Wind Speed",
           data: weatherData.hourly.wind_speed_10m,
-          borderColor: "red",
+          borderColor: chartPrimaryColor,
           borderJoinStyle: "round",
           pointStyle: vectorImg,
           fill: false,
@@ -694,7 +797,7 @@ const displayDetailedWeather = () => {
         {
           label: "Wind Gusts",
           data: weatherData.hourly.wind_gusts_10m,
-          borderColor: "grey",
+          borderColor: chartTertiaryColor,
           borderJoinStyle: "round",
           pointStyle: "circle",
           fill: false,
@@ -764,4 +867,5 @@ $('.dropdown').click(function(){
   - change date format or include days as well as time
 - make it look pretty
 - add modal on page load
+- make chart code DRY
 */
