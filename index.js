@@ -295,6 +295,7 @@ const displayDetailedWeather = () => {
   const chartPrimaryColor = '#1aa3ff';
   const chartSecondaryColor = '#33d6ff';
   const chartTertiaryColor = '#cccccc';
+  Chart.defaults.color = '#808080';
   const config = {
     type: 'line',
     data: {},
@@ -337,8 +338,6 @@ const displayDetailedWeather = () => {
       },
     }
   };
-
-  Chart.defaults.color = '#ffffff';
 
   new Chart($("#temperature-chart"), {
     type: "line",
@@ -863,9 +862,21 @@ window.onload = (e) => {
   }, 1000);
 }
 
-$('.modal-close').click(function(){
+$('.modal-close').click(function() {
   $('#modal').addClass('hidden');
 });
+
+$('.slider').click(function() {
+  if ($('.backdrop').css('justify-content') == 'flex-start') {
+    $('.backdrop').css('justify-content', 'flex-end');
+  } else {
+    $('.backdrop').css('justify-content', 'flex-start');
+  }
+  $('body').toggleClass('dark-mode');
+  $('.weather-section').toggleClass('weather-section-dark');
+  $('.weather-icon').toggleClass('weather-icon-dark');
+  $('.dropdown-arrow').toggleClass('dropdown-arrow-dark');
+})
 
 /*
   TO DO:
