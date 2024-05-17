@@ -252,3 +252,8 @@ body {
   border: none;
   background-color: var(--dark-grey);
 }
+
+#model-info {
+  width: 98%;
+  margin: 0 auto;
+}

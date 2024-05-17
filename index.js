@@ -119,6 +119,10 @@ const displayData = () => {
     icon = "night";
   }
 
+  if (icon === 'sun' && current.cloud_cover > 30) {
+    icon = 'sun_and_cloud';
+  }
+
   let currentTempDisplay =
     Math.round(current.temperature_2m).toString() +
     current_units.temperature_2m.toString();
@@ -215,9 +219,11 @@ const displayData = () => {
 
   $.each(sevenDays, function (dayIndex, day) {
     let dailyIcon = getSymbol(daily.weather_code[dayIndex]);
+
     if (dailyIcon === "snow" && daily.temperature_2m_max[dayIndex] > 3) {
       dailyIcon = "showers";
     }
+
     let divID = day.toLowerCase();
     let $container = $(`<div id="${divID}-forecast" class="col-xs-12 col-sm-6 col-lg-3 col-xl"></div>`);
     $container
@@ -240,6 +246,10 @@ const displayData = () => {
       );
     $(".forecast-table").append($container);
   });
+
+  if ($('.backdrop').css('justify-content') == 'flex-end') {  // if website is in dark mode, add dark mode class before DOM update
+    $('.weather-icon').addClass('weather-icon-dark');
+  }
 
   //detailed weather
   $(".detailed-forecast-container").remove();
@@ -877,16 +887,3 @@ $('.slider').click(function() {
   $('.weather-icon').toggleClass('weather-icon-dark');
   $('.dropdown-arrow').toggleClass('dropdown-arrow-dark');
 })
-
-/*
-  TO DO:
-
-- change weather icon logic
-  -no sun and cloud condition
-- tweak detailed forecast
-  - all y-axis on both sides
-  - change date format or include days as well as time
-- make it look pretty
-- add modal on page load
-- make chart code DRY
-*/
