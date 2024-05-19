@@ -128,10 +128,6 @@ body {
   color: inherit;
 }
 
-.socials > a:hover {
-  color: var(--light-grey);
-}
-
 .hidden {
   display: none;
 }
