@@ -136,7 +136,7 @@ const displayData = () => {
     .append(`<p id="current-temp">${currentTempDisplay}</p>`)
     .append(`<p id="current-feels">Feels like: ${apparentTempDisplay}</p>`);
   $(".current-icon-container").append(
-    `<img class="weather-icon" id="current-weather-icon" src="/weather-app/images/${icon}.png" alt="weather-icon">`
+    `<img class="weather-icon" id="current-weather-icon" src="/images/${icon}.png" alt="weather-icon">`
   );
 
   //  more specific current temperature info
@@ -242,7 +242,7 @@ const displayData = () => {
     $container
       .find(".daily-icon-container")
       .append(
-        `<img class="weather-icon" src="/weather-app/images/${dailyIcon}.png" alt="weather-icon">`
+        `<img class="weather-icon" src="/images/${dailyIcon}.png" alt="weather-icon">`
       );
     $(".forecast-table").append($container);
   });
